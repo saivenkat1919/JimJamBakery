@@ -3,13 +3,19 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/config";
+
 function OwnerNavbar() {
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem("user");
-    navigate("/");
-  };
+const logout = async () => {
+  await signOut(auth);
+
+  localStorage.removeItem("user");
+
+  navigate("/");
+};
 
   return (
     <div className="bg-black text-white p-4 flex justify-between items-center">

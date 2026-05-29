@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import CustomerHome from "./pages/CustomerHome";
@@ -9,9 +10,29 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import ManageProducts from "./pages/ManageProducts";
 
 function App() {
+
+  const user = JSON.parse(
+    localStorage.getItem("user")
+  );
+
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route
+  path="/"
+  element={
+    user ? (
+      <Navigate
+        to={
+          user.role === "owner"
+            ? "/owner"
+            : "/customer"
+        }
+      />
+    ) : (
+      <Login />
+    )
+  }
+/>
 
       <Route
         path="/customer"

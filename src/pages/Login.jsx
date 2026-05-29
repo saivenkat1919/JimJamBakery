@@ -1,5 +1,10 @@
 import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
+
+import {
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 import {
   collection,
@@ -8,13 +13,22 @@ import {
   where,
 } from "firebase/firestore";
 
-import { db } from "../firebase/config";
+import {
+  auth,
+  db,
+} from "../firebase/config";
 
 function Login() {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,25 +36,44 @@ function Login() {
     try {
       setLoading(true);
 
+      // FIREBASE AUTH LOGIN
+      const userCredential =
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      const firebaseUser =
+        userCredential.user;
+
+      // FETCH ROLE FROM FIRESTORE
       const q = query(
         collection(db, "users"),
-        where("username", "==", username)
+        where("email", "==", firebaseUser.email)
       );
 
       const snapshot = await getDocs(q);
 
       if (snapshot.empty) {
-        alert("User not found");
+        alert("User role not found");
         return;
       }
 
-      const userData = snapshot.docs[0].data();
+      const userData =
+        snapshot.docs[0].data();
 
       localStorage.setItem(
         "user",
-        JSON.stringify(userData)
+        JSON.stringify({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          role: userData.role,
+          name: userData.name,
+        })
       );
 
+      // REDIRECT BASED ON ROLE
       if (userData.role === "owner") {
         navigate("/owner");
       } else {
@@ -48,7 +81,8 @@ function Login() {
       }
     } catch (error) {
       console.log(error);
-      alert("Login failed");
+
+      alert("Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -65,18 +99,34 @@ function Login() {
         </h1>
 
         <input
-          type="text"
-          placeholder="Username"
+          type="email"
+          placeholder="Email"
           className="w-full border p-3 rounded-lg mb-4"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={email}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full border p-3 rounded-lg mb-4"
+          value={password}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+          required
         />
 
         <button
           disabled={loading}
           className="w-full bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg"
         >
-          {loading ? "Loading..." : "Login"}
+          {loading
+            ? "Logging in..."
+            : "Login"}
         </button>
       </form>
     </div>
