@@ -1,26 +1,37 @@
-import { createContext, useState } from "react";
+import {
+  createContext,
+  useState,
+} from "react";
 
-export const CartContext = createContext();
+export const CartContext =
+  createContext();
 
-function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+export const CartProvider = ({
+  children,
+}) => {
+  const [cartItems, setCartItems] =
+    useState([]);
+
+  // ADD TO CART
 
   const addToCart = (product) => {
-    const existing = cartItems.find(
-      (item) => item.id === product.id
-    );
-
-    if (existing) {
-      const updated = cartItems.map((item) =>
-        item.id === product.id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-            }
-          : item
+    const existing =
+      cartItems.find(
+        (item) => item.id === product.id
       );
 
-      setCartItems(updated);
+    if (existing) {
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                quantity:
+                  item.quantity + 1,
+              }
+            : item
+        )
+      );
     } else {
       setCartItems([
         ...cartItems,
@@ -32,21 +43,65 @@ function CartProvider({ children }) {
     }
   };
 
-  const removeFromCart = (id) => {
+  // INCREMENT
+
+  const increaseQuantity = (id) => {
     setCartItems(
-      cartItems.filter((item) => item.id !== id)
+      cartItems.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity:
+                item.quantity + 1,
+            }
+          : item
+      )
     );
   };
 
+  // DECREMENT
+
+  const decreaseQuantity = (id) => {
+    setCartItems(
+      cartItems
+        .map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                quantity:
+                  item.quantity - 1,
+              }
+            : item
+        )
+        .filter(
+          (item) => item.quantity > 0
+        )
+    );
+  };
+
+  // REMOVE
+
+  const removeFromCart = (id) => {
+    setCartItems(
+      cartItems.filter(
+        (item) => item.id !== id
+      )
+    );
+  };
+
+  // CLEAR
+
   const clearCart = () => {
-  setCartItems([]);
-};
+    setCartItems([]);
+  };
 
   return (
     <CartContext.Provider
       value={{
         cartItems,
         addToCart,
+        increaseQuantity,
+        decreaseQuantity,
         removeFromCart,
         clearCart,
       }}
@@ -54,6 +109,4 @@ function CartProvider({ children }) {
       {children}
     </CartContext.Provider>
   );
-}
-
-export default CartProvider;
+};

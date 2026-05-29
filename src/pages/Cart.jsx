@@ -7,6 +7,12 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
+import {
+  FiPlus,
+  FiMinus,
+  FiTrash2,
+} from "react-icons/fi";
+
 import { db } from "../firebase/config";
 
 import Navbar from "../components/Navbar";
@@ -15,10 +21,12 @@ import { CartContext } from "../context/CartContext";
 
 function Cart() {
   const {
-    cartItems,
-    removeFromCart,
-    clearCart,
-  } = useContext(CartContext);
+  cartItems,
+  removeFromCart,
+  clearCart,
+  increaseQuantity,
+  decreaseQuantity,
+} = useContext(CartContext);
 
   const [loading, setLoading] = useState(false);
 
@@ -80,43 +88,91 @@ function Cart() {
           <div className="space-y-4">
             {cartItems.map((item) => (
               <div
-                key={item.id}
-                className="bg-white p-4 rounded-2xl shadow flex flex-col md:flex-row gap-4 justify-between md:items-center"
-              >
-                <div>
-                  <h2 className="font-bold">
-                    {item.name}
-                  </h2>
+  key={item.id}
+  className="bg-white p-4 rounded-2xl shadow flex flex-col md:flex-row justify-between gap-4 md:items-center"
+>
+  <div>
+    <h2 className="text-xl font-bold">
+      {item.name}
+    </h2>
 
-                  <p>
-                    ₹{item.price} × {item.quantity}
-                  </p>
-                </div>
+    <p className="text-gray-500">
+      ₹{item.price} each
+    </p>
 
-                <button
-                  onClick={() =>
-                    removeFromCart(item.id)
-                  }
-                  className="bg-red-500 text-white px-4 rounded-lg"
-                >
-                  Remove
-                </button>
-              </div>
+    <p className="text-orange-500 font-bold mt-2">
+      ₹
+      {item.price *
+        item.quantity}
+    </p>
+  </div>
+
+  <div className="flex items-center gap-3">
+    {/* DECREASE */}
+
+    <button
+      onClick={() =>
+        decreaseQuantity(item.id)
+      }
+      className="bg-gray-200 p-2 rounded-lg"
+    >
+      <FiMinus />
+    </button>
+
+    {/* QUANTITY */}
+
+    <span className="text-xl font-bold w-8 text-center">
+      {item.quantity}
+    </span>
+
+    {/* INCREASE */}
+
+    <button
+      onClick={() =>
+        increaseQuantity(item.id)
+      }
+      className="bg-orange-500 text-white p-2 rounded-lg"
+    >
+      <FiPlus />
+    </button>
+
+    {/* REMOVE */}
+
+    <button
+      onClick={() =>
+        removeFromCart(item.id)
+      }
+      className="bg-red-500 text-white p-2 rounded-lg ml-2"
+    >
+      <FiTrash2 />
+    </button>
+  </div>
+</div>
             ))}
 
-            <div className="text-2xl font-bold">
-              Total: ₹{total}
-            </div>
+            <div className="bg-white rounded-2xl shadow p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+  <div>
+    <h2 className="text-gray-500">
+      Total Amount
+    </h2>
 
-            <button
-              onClick={placeOrder}
-              disabled={loading}
-              className="bg-orange-500 text-white px-6 py-3 rounded-xl"
-            >
-              {loading
-                ? "Placing..."
-                : "Place Order"}
-            </button>
+    <p className="text-3xl font-bold text-orange-500">
+      ₹{total}
+    </p>
+  </div>
+
+  <button
+    onClick={placeOrder}
+    disabled={loading}
+    className="bg-orange-500 hover:bg-orange-600 transition text-white px-8 py-3 rounded-xl font-semibold"
+  >
+    {loading
+      ? "Placing..."
+      : "Place Order"}
+  </button>
+</div>
+
+            
           </div>
         )}
       </div>
