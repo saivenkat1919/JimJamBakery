@@ -13,6 +13,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Toaster position="top-right" />
       <CartProvider>
+        <Toaster
+  position="top-right"
+  toastOptions={{
+    duration: 3000,
+  }}
+/>
         <App />
       </CartProvider>
     </BrowserRouter>

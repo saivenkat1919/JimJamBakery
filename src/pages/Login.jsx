@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -75,14 +75,16 @@ function Login() {
 
       // REDIRECT BASED ON ROLE
       if (userData.role === "owner") {
+        toast.success("Login successful");
         navigate("/owner");
       } else {
+        toast.success("Login successful");
         navigate("/customer");
       }
     } catch (error) {
       console.log(error);
 
-      alert("Invalid email or password");
+      toast.error("Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -128,9 +130,14 @@ function Login() {
         disabled={loading}
         className="w-full bg-orange-500 hover:bg-orange-600 transition text-white p-3 rounded-xl font-semibold"
       >
-        {loading
-          ? "Logging in..."
-          : "Login"}
+        {loading ? (
+  <span className="flex justify-center items-center gap-2">
+    <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
+    Logging in...
+  </span>
+) : (
+  "Login"
+)}
       </button>
     </form>
   </div>

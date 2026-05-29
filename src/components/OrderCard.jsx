@@ -18,6 +18,13 @@ function OrderCard({ order }) {
     }
   };
 
+  const statusColors = {
+  Pending: "bg-yellow-100 text-yellow-700",
+  Preparing: "bg-blue-100 text-blue-700",
+  Ready: "bg-purple-100 text-purple-700",
+  Delivered: "bg-green-100 text-green-700",
+};
+
   return (
     <div className="bg-white p-5 rounded-2xl shadow">
       <div className="flex justify-between mb-4">
@@ -26,9 +33,11 @@ function OrderCard({ order }) {
             {order.customerName}
           </h2>
 
-          <p className="text-gray-500">
-            {order.status}
-          </p>
+          <p
+  className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${statusColors[order.status]}`}
+>
+  {order.status}
+</p>
         </div>
 
         <div className="font-bold">

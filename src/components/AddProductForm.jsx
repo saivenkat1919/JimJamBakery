@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import {
   addDoc,
@@ -31,7 +32,7 @@ function AddProductForm() {
         available: true,
       });
 
-      alert("Product added");
+      toast.success("Product added successfully");
 
       setName("");
       setPrice("");
@@ -39,7 +40,7 @@ function AddProductForm() {
       setImage("");
     } catch (error) {
       console.log(error);
-      alert("Failed to add product");
+      toast.error("Failed to add product");
     } finally {
       setLoading(false);
     }

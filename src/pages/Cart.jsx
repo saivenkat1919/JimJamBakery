@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 
 import {
   addDoc,
@@ -36,19 +37,21 @@ function Cart() {
       );
 
       await addDoc(collection(db, "orders"), {
-        customerName: user.username,
-        items: cartItems,
-        total,
-        status: "Pending",
-        createdAt: serverTimestamp(),
-      });
+  customerName: user.name || user.email,
+  customerEmail: user.email,
+  customerId: user.uid,
+  items: cartItems,
+  total,
+  status: "Pending",
+  createdAt: serverTimestamp(),
+});
 
-      alert("Order placed successfully");
+      toast.success("Order placed successfully");
 
       clearCart();
     } catch (error) {
       console.log(error);
-      alert("Failed to place order");
+      toast.error("Failed to place order");
     } finally {
       setLoading(false);
     }
@@ -64,7 +67,15 @@ function Cart() {
         </h1>
 
         {cartItems.length === 0 ? (
-          <p>Cart is empty</p>
+          <div className="text-center py-20">
+  <h2 className="text-3xl font-bold text-gray-500 mb-4">
+    Your cart is empty
+  </h2>
+
+  <p className="text-gray-400">
+    Add delicious bakery items to continue
+  </p>
+</div>
         ) : (
           <div className="space-y-4">
             {cartItems.map((item) => (
