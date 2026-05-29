@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Cart from "./pages/Cart";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ManageProducts from "./pages/ManageProducts";
+import MyOrders from "./pages/MyOrders";
 
 function App() {
 
@@ -69,6 +70,15 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+  path="/my-orders"
+  element={
+    <ProtectedRoute role="customer">
+      <MyOrders />
+    </ProtectedRoute>
+  }
+/>
 
       <Route path="*" element={<NotFound />} />
     </Routes>
