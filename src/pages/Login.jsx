@@ -1,36 +1,56 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+
+import { db } from "../firebase/config";
+
 function Login() {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // TEMP LOGIN
-    if (username === "owner" && password === "1234") {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          role: "owner",
-          username,
-        })
+    try {
+      setLoading(true);
+
+      const q = query(
+        collection(db, "users"),
+        where("username", "==", username)
       );
 
-      navigate("/owner");
-    } else {
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        alert("User not found");
+        return;
+      }
+
+      const userData = snapshot.docs[0].data();
+
       localStorage.setItem(
         "user",
-        JSON.stringify({
-          role: "customer",
-          username,
-        })
+        JSON.stringify(userData)
       );
 
-      navigate("/customer");
+      if (userData.role === "owner") {
+        navigate("/owner");
+      } else {
+        navigate("/customer");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,18 +72,11 @@ function Login() {
           onChange={(e) => setUsername(e.target.value)}
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border p-3 rounded-lg mb-4"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
         <button
+          disabled={loading}
           className="w-full bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg"
         >
-          Login
+          {loading ? "Loading..." : "Login"}
         </button>
       </form>
     </div>
