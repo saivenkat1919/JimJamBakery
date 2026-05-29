@@ -1,18 +1,58 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
+
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
+
+import { db } from "../firebase/config";
 
 import Navbar from "../components/Navbar";
 
 import { CartContext } from "../context/CartContext";
 
 function Cart() {
-  const { cartItems, removeFromCart } =
-    useContext(CartContext);
+  const {
+    cartItems,
+    removeFromCart,
+    clearCart,
+  } = useContext(CartContext);
+
+  const [loading, setLoading] = useState(false);
 
   const total = cartItems.reduce(
     (acc, item) =>
       acc + item.price * item.quantity,
     0
   );
+
+  const placeOrder = async () => {
+    try {
+      setLoading(true);
+
+      const user = JSON.parse(
+        localStorage.getItem("user")
+      );
+
+      await addDoc(collection(db, "orders"), {
+        customerName: user.username,
+        items: cartItems,
+        total,
+        status: "Pending",
+        createdAt: serverTimestamp(),
+      });
+
+      alert("Order placed successfully");
+
+      clearCart();
+    } catch (error) {
+      console.log(error);
+      alert("Failed to place order");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-orange-50 min-h-screen">
@@ -57,8 +97,14 @@ function Cart() {
               Total: ₹{total}
             </div>
 
-            <button className="bg-orange-500 text-white px-6 py-3 rounded-xl">
-              Place Order
+            <button
+              onClick={placeOrder}
+              disabled={loading}
+              className="bg-orange-500 text-white px-6 py-3 rounded-xl"
+            >
+              {loading
+                ? "Placing..."
+                : "Place Order"}
             </button>
           </div>
         )}
