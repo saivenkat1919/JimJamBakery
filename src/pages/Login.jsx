@@ -89,48 +89,52 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-orange-50">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-sm"
-      >
-        <h1 className="text-3xl font-bold text-center mb-6">
+  <div className="min-h-screen bg-orange-50 flex items-center justify-center px-4">
+    <form
+      onSubmit={handleLogin}
+      className="bg-white w-full max-w-md rounded-3xl shadow-xl p-6 md:p-10"
+    >
+      <div className="text-center mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-orange-500">
           JimJamBakery
         </h1>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border p-3 rounded-lg mb-4"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          required
-        />
+        <p className="text-gray-500 mt-2">
+          Fresh Bakery Ordering System
+        </p>
+      </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border p-3 rounded-lg mb-4"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-          required
-        />
+      <input
+        type="email"
+        placeholder="Email"
+        className="w-full border border-gray-300 p-3 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        value={email}
+        onChange={(e) =>
+          setEmail(e.target.value)
+        }
+      />
 
-        <button
-          disabled={loading}
-          className="w-full bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg"
-        >
-          {loading
-            ? "Logging in..."
-            : "Login"}
-        </button>
-      </form>
-    </div>
-  );
+      <input
+        type="password"
+        placeholder="Password"
+        className="w-full border border-gray-300 p-3 rounded-xl mb-6 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        value={password}
+        onChange={(e) =>
+          setPassword(e.target.value)
+        }
+      />
+
+      <button
+        disabled={loading}
+        className="w-full bg-orange-500 hover:bg-orange-600 transition text-white p-3 rounded-xl font-semibold"
+      >
+        {loading
+          ? "Logging in..."
+          : "Login"}
+      </button>
+    </form>
+  </div>
+);
 }
 
 export default Login;

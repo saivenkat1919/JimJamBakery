@@ -55,10 +55,10 @@ function Cart() {
   };
 
   return (
-    <div className="bg-orange-50 min-h-screen">
+    <div className="bg-gradient-to-b from-orange-50 to-white min-h-screen">
       <Navbar />
 
-      <div className="p-6">
+      <div className="max-w-4xl mx-auto p-4 md:p-6">
         <h1 className="text-3xl font-bold mb-6">
           Your Cart
         </h1>
@@ -70,7 +70,7 @@ function Cart() {
             {cartItems.map((item) => (
               <div
                 key={item.id}
-                className="bg-white p-4 rounded-xl shadow flex justify-between"
+                className="bg-white p-4 rounded-2xl shadow flex flex-col md:flex-row gap-4 justify-between md:items-center"
               >
                 <div>
                   <h2 className="font-bold">

@@ -1,36 +1,59 @@
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
+import {
+  FiShoppingCart,
+  FiLogOut,
+} from "react-icons/fi";
+
 import { signOut } from "firebase/auth";
+
 import { auth } from "../firebase/config";
 
 function Navbar() {
   const navigate = useNavigate();
 
-  const logout = () => {
+  const logout = async () => {
+    await signOut(auth);
+
     localStorage.removeItem("user");
+
     navigate("/");
   };
 
   return (
-    <div className="bg-orange-500 text-white p-4 flex justify-between">
-      <h1 className="font-bold text-xl">
-        JimJamBakery
-      </h1>
+    <div className="bg-orange-500 text-white px-4 py-3 shadow-md">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <h1 className="text-lg md:text-2xl font-bold">
+          JimJamBakery
+        </h1>
 
-      <div className="flex gap-4 items-center">
-        <Link to="/customer">
-          Menu
-        </Link>
+        <div className="flex items-center gap-3 md:gap-6">
+          <Link
+            to="/customer"
+            className="text-sm md:text-base"
+          >
+            Menu
+          </Link>
 
-        <Link to="/cart">
-          Cart
-        </Link>
+          <Link
+            to="/cart"
+            className="flex items-center gap-1 text-sm md:text-base"
+          >
+            <FiShoppingCart />
+            Cart
+          </Link>
 
-        <button
-          onClick={logout}
-          className="bg-white text-orange-500 px-4 py-1 rounded-lg"
-        >
-          Logout
-        </button>
+          <button
+            onClick={logout}
+            className="bg-white text-orange-500 px-3 py-1 rounded-lg flex items-center gap-1 text-sm md:text-base"
+          >
+            <FiLogOut />
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

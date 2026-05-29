@@ -35,10 +35,10 @@ function CustomerHome() {
   }, []);
 
   return (
-    <div className="bg-orange-50 min-h-screen">
+    <div className="bg-gradient-to-b from-orange-50 to-white min-h-screen">
       <Navbar />
 
-      <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {products.map((product) => (
           <ProductCard
             key={product.id}
