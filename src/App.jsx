@@ -6,6 +6,7 @@ import OwnerDashboard from "./pages/OwnerDashboard";
 import NotFound from "./pages/NotFound";
 import Cart from "./pages/Cart";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import ManageProducts from "./pages/ManageProducts";
 
 function App() {
   return (
@@ -35,6 +36,15 @@ function App() {
         element={
           <ProtectedRoute role="customer">
             <Cart />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/owner/products"
+        element={
+          <ProtectedRoute role="owner">
+            <ManageProducts />
           </ProtectedRoute>
         }
       />

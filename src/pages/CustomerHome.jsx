@@ -23,7 +23,11 @@ function CustomerHome() {
       ...doc.data(),
     }));
 
-    setProducts(data);
+    setProducts(
+        data.filter(
+            (product) => product.available
+        )
+        );
   };
 
   useEffect(() => {

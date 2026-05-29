@@ -1,4 +1,7 @@
-import { useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 function OwnerNavbar() {
   const navigate = useNavigate();
@@ -9,17 +12,27 @@ function OwnerNavbar() {
   };
 
   return (
-    <div className="bg-black text-white p-4 flex justify-between">
+    <div className="bg-black text-white p-4 flex justify-between items-center">
       <h1 className="text-xl font-bold">
         JimJamBakery Owner
       </h1>
 
-      <button
-        onClick={logout}
-        className="bg-red-500 px-4 py-2 rounded-lg"
-      >
-        Logout
-      </button>
+      <div className="flex gap-4 items-center">
+        <Link to="/owner">
+          Orders
+        </Link>
+
+        <Link to="/owner/products">
+          Products
+        </Link>
+
+        <button
+          onClick={logout}
+          className="bg-red-500 px-4 py-2 rounded-lg"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 }
