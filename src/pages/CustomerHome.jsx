@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import StickyCartBar from "../components/StickyCartBar";
 
 import {
   collection,
@@ -34,11 +35,7 @@ const [selectedCategory, setSelectedCategory] =
       ...doc.data(),
     }));
 
-    setProducts(
-        data.filter(
-            (product) => product.available
-        )
-        );
+    setProducts(data);
         setLoading(false);
   };
 
@@ -117,7 +114,7 @@ const filteredProducts = products.filter(
   />
 </div>
 
-      <div className="max-w-7xl mx-auto px-4 pb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="max-w-7xl mx-auto px-4 pb-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.length === 0 ? (
   <div className="col-span-full text-center py-20">
     <h2 className="text-3xl font-bold text-gray-500 mb-3">
@@ -137,6 +134,7 @@ const filteredProducts = products.filter(
   ))
 )}
       </div>
+      <StickyCartBar />
     </div>
   );
 }

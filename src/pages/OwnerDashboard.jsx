@@ -56,6 +56,25 @@ function OwnerDashboard() {
     (order) => order.status === "Delivered"
   ).length;
 
+  
+
+  const liveOrders = orders.filter(
+  (order) =>
+    order.status === "Pending" ||
+    order.status === "Preparing" ||
+    order.status === "Ready"
+);
+
+const completedOrders = orders.filter(
+  (order) =>
+    order.status === "Delivered"
+);
+
+const cancelledOrders = orders.filter(
+  (order) =>
+    order.status === "Cancelled"
+); 
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <OwnerNavbar />
@@ -85,11 +104,82 @@ function OwnerDashboard() {
 
         {/* RECENT ORDERS */}
 
-        <h2 className="text-2xl font-bold mb-4">
-          Recent Orders
-        </h2>
+         {/* LIVE ORDERS */}
 
-        {orders.length === 0 ? (
+<div className="mb-10">
+  <h2 className="text-3xl font-bold mb-5 text-red-500">
+    🔴 Live Orders
+  </h2>
+
+  {liveOrders.length === 0 ? (
+    <div className="bg-white rounded-2xl p-6 shadow">
+      No live orders
+    </div>
+  ) : (
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      {liveOrders.map((order) => (
+        <OrderCard
+          key={order.id}
+          order={order}
+        />
+      ))}
+    </div>
+  )}
+</div>
+
+        {/* COMPLETED ORDERS */}
+
+<div className="mb-10">
+  <h2 className="text-3xl font-bold mb-5 text-green-600">
+    ✅ Completed Orders
+  </h2>
+
+  {completedOrders.length === 0 ? (
+    <div className="bg-white rounded-2xl p-6 shadow">
+      No completed orders
+    </div>
+  ) : (
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      {completedOrders.map(
+        (order) => (
+          <OrderCard
+            key={order.id}
+            order={order}
+          />
+        )
+      )}
+    </div>
+  )}
+</div>
+
+{/* CANCELLED ORDERS */}
+
+<div>
+  <h2 className="text-3xl font-bold mb-5 text-red-700">
+    ❌ Cancelled Orders
+  </h2>
+
+  {cancelledOrders.length === 0 ? (
+    <div className="bg-white rounded-2xl p-6 shadow">
+      No cancelled orders
+    </div>
+  ) : (
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      {cancelledOrders.map(
+        (order) => (
+          <OrderCard
+            key={order.id}
+            order={order}
+          />
+        )
+      )}
+    </div>
+  )}
+</div>
+
+       
+
+        {/* {orders.length === 0 ? (
           <p>No orders yet</p>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -100,7 +190,7 @@ function OwnerDashboard() {
               />
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

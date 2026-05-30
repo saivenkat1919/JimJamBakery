@@ -11,7 +11,6 @@ import { CartProvider } from "./context/CartContext";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-      <Toaster position="top-right" />
       <CartProvider>
         <Toaster
   position="top-right"

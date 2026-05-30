@@ -9,6 +9,9 @@ import Cart from "./pages/Cart";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ManageProducts from "./pages/ManageProducts";
 import MyOrders from "./pages/MyOrders";
+import Signup from "./pages/SignUp";
+import MyProfile from "./pages/MyProfile";
+import { FiUser } from "react-icons/fi";
 
 function App() {
 
@@ -34,7 +37,7 @@ function App() {
     )
   }
 />
-
+      
       <Route
         path="/customer"
         element={
@@ -44,6 +47,11 @@ function App() {
         }
       />
 
+       <Route
+  path="/signup"
+  element={<Signup />}
+/>
+
       <Route
         path="/owner"
         element={
@@ -52,6 +60,15 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+  path="/profile"
+  element={
+    <ProtectedRoute role="customer">
+      <MyProfile />
+    </ProtectedRoute>
+  }
+/>
 
       <Route
         path="/cart"

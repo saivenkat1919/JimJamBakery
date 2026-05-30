@@ -7,6 +7,7 @@ import {
   FiShoppingCart,
   FiLogOut,
   FiClipboard,
+  FiUser,
 } from "react-icons/fi";
 
 import { signOut } from "firebase/auth";
@@ -46,7 +47,13 @@ function Navbar() {
   <FiClipboard />
   Orders
 </Link>
-
+          <Link
+  to="/profile"
+  className="flex items-center gap-1 text-sm md:text-base"
+>
+  <FiUser />
+  Profile
+</Link>
           <Link
             to="/cart"
             className="flex items-center gap-1 text-sm md:text-base"

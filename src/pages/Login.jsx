@@ -1,21 +1,31 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
 
 import {
   auth,
   db,
+} from "../firebase/config";
+
+import {
+  signInWithPopup,
+} from "firebase/auth";
+
+import {
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
+import {
+  googleProvider,
 } from "../firebase/config";
 
 function Login() {
@@ -48,20 +58,23 @@ function Login() {
         userCredential.user;
 
       // FETCH ROLE FROM FIRESTORE
-      const q = query(
-        collection(db, "users"),
-        where("email", "==", firebaseUser.email)
-      );
+      const userDoc = await getDoc(
+  doc(
+    db,
+    "users",
+    firebaseUser.uid
+  )
+);
 
-      const snapshot = await getDocs(q);
+if (!userDoc.exists()) {
+  toast.error(
+    "User profile not found"
+  );
+  return;
+}
 
-      if (snapshot.empty) {
-        alert("User role not found");
-        return;
-      }
-
-      const userData =
-        snapshot.docs[0].data();
+const userData =
+  userDoc.data();
 
       localStorage.setItem(
         "user",
@@ -90,6 +103,76 @@ function Login() {
     }
   };
 
+  const handleGoogleLogin =
+  async () => {
+    try {
+      setLoading(true);
+
+      const result =
+        await signInWithPopup(
+          auth,
+          googleProvider
+        );
+
+      const user =
+        result.user;
+
+      const userRef = doc(
+        db,
+        "users",
+        user.uid
+      );
+
+      const userDoc =
+        await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          name:
+            user.displayName || "",
+          email:
+            user.email || "",
+          phoneNumber: "",
+          role: "customer",
+          authProvider:
+            "google",
+          createdAt:
+            serverTimestamp(),
+        });
+      }
+
+      const profile =
+        (
+          await getDoc(userRef)
+        ).data();
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          role: profile.role,
+          name: profile.name,
+        })
+      );
+
+      toast.success(
+        "Google Login Successful"
+      );
+
+      navigate("/customer");
+    } catch (error) {
+      console.log(error);
+
+      toast.error(
+        "Google Login Failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
   <div className="min-h-screen bg-orange-50 flex items-center justify-center px-4">
     <form
@@ -102,7 +185,7 @@ function Login() {
         </h1>
 
         <p className="text-gray-500 mt-2">
-          Fresh Bakery Ordering System
+          Baked Happiness, One Click Away
         </p>
       </div>
 
@@ -125,6 +208,37 @@ function Login() {
           setPassword(e.target.value)
         }
       />
+
+      <div className="text-center mt-6">
+  <p className="text-gray-600">
+    New Customer?
+  </p>
+
+  <Link
+    to="/signup"
+    className="text-orange-500 font-semibold"
+  >
+    Create Account
+  </Link>
+</div>
+
+<div className="my-6 flex items-center">
+  <div className="flex-1 border-t"></div>
+
+  <span className="px-3 text-gray-500">
+    OR
+  </span>
+
+  <div className="flex-1 border-t"></div>
+</div>
+
+<button
+  type="button"
+  onClick={handleGoogleLogin}
+  className="w-full border border-gray-300 bg-white p-3 rounded-xl font-semibold hover:bg-gray-50"
+>
+  Continue with Google
+</button>
 
       <button
         disabled={loading}
